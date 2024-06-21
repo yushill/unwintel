@@ -1,0 +1,37 @@
+# -*- mode: Makefile -*-
+UWT_MODULE ?= main_exe
+
+CXX         = g++
+CXXFLAGS    = -Wall -g3
+CXXPATHS    = -I. -I$(UWT_FRAMEWORK)
+LDFLAGS     =
+RM          = rm -f
+MKDIR       = mkdir -p
+AR          = ar -rsc
+
+EXE         = $(UWT_APPNAME)
+
+BUILD       = build
+# Take all sources from the translations directory
+SRCS        = $(wildcard $(UWT_MODULE)/*.cc)
+OBJS        = $(patsubst $(UWT_MODULE)/%.cc,$(BUILD)/%.o,$(SRCS))
+OACC        = $(BUILD)/thisapp.a
+DEPS        = $(patsubst %.o,%.d,$(OBJS))
+DLLS        = $(wildcard shared/*_dll/archive.a)
+
+all:  $(EXE)
+
+$(EXE): $(OBJS) $(DLLS)
+	$(CXX) $(LDFLAGS) -o $(EXE) $(OACC) $(DLLS) $(UWT_FRAMEWORK)/libuwt.a -lpthread
+
+$(OBJS): $(BUILD)/%.o: $(UWT_MODULE)/%.cc
+	@$(MKDIR) $(BUILD)
+	$(CXX) $(CXXFLAGS) $(CXXPATHS) -MMD -MP -c -o $@ $<
+	$(AR) $(OACC) $@
+
+# clean all
+clean:
+	$(RM) $(DEPS) $(OBJS) $(EXE)
+
+# include dependency files
+-include $(DEPS)

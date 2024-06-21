@@ -1,0 +1,6 @@
+#ifndef BREAKPOINT
+#define BREAKPOINT
+
+#define EIP( ADDR )
+
+#endif /* BREAKPOINT */

@@ -1,0 +1,35 @@
+Q: Should the generated code preserve EIP coherency.
+
+A: It seems not necessary...
+
+Q: Should the generated code preserve EFLAGS coherency.
+
+A: It seems not necessary... It is possible to have EFLAGS condition
+   codes uses as local variables of the functions (they should not be
+   preserved across function calls)
+
+Q: How to manage DLL importing mechanisms:
+   We can link on external function
+   - Function already exists:
+   - Function doesn't exist;
+     - User specified
+     - UWT Generated
+   What base address to give to imported DLL images ?
+   API interception ?
+   how to perform mapping ?
+   mapping for different cases
+
+A: Modules (executable image and dll images) are now treated modulary
+   as they should be. A base Module class provides the standard
+   interface to symbol access that the UWT loader uses to link all the
+   modules. An inheritance mechanism provides a way let the user
+   choose between "user-specified" or "UWT reverse-engineered" DLL
+   functions. To reverse-engineer a DLL, the user should use the
+   specialized Module : LibModule.
+
+Q: How do we map for symbol that refers to data rather than code when
+   using user-specified API codes ?
+
+A: This is still an open question, and we hope most of DLL do not use
+   exported variables.
+

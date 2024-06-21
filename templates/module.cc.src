@@ -1,0 +1,20 @@
+#include <uwt/win/module.hh>
+
+namespace MAIN_EXE {
+  
+#define FUNCTION( ADDR, NAME ) uint32_t NAME( UWT::Context& _ctx )
+#include <main_exe/functions.inc>
+#undef FUNCTION
+  
+  UWT::Module*
+  __import__() {
+    UWT::Module* rval = new UWT::MainModule( "/path/to/file.exe" );
+
+#define FUNCTION( ADDR, NAME ) rval->record( ADDR, #NAME, NAME );
+#include <main_exe/functions.inc>
+#undef FUNCTION
+    
+    return rval;
+  }
+  
+};
